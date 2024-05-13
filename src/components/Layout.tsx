@@ -2,6 +2,7 @@ import React from 'react';
 import { Layout as LayoutAntd, theme } from 'antd';
 import Header from './Header';
 import Footer from './Footer';
+import { Outlet } from 'react-router-dom';
 
 const { Content } = LayoutAntd;
 
@@ -28,7 +29,7 @@ const Layout: React.FC = () => {
                         borderRadius: borderRadiusLG,
                     }}
                 >
-                    Hello Main Content!
+                    <Outlet />
                 </div>
             </Content>
 
