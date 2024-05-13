@@ -1,90 +1,96 @@
-import React from 'react';
-import { Button, Space, Table, Tag } from 'antd';
+import React, { useEffect } from 'react';
+import { Button, Popconfirm, Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import { Link } from 'react-router-dom';
+import { productsService } from '../services/products.service';
+import { ProductModel } from '../models/products.model';
+import { DeleteOutlined, EditOutlined, InfoCircleOutlined } from '@ant-design/icons';
 
-interface DataType {
-    key: string;
-    name: string;
-    age: number;
-    address: string;
-    tags: string[];
-}
-
-const columns: TableProps<DataType>['columns'] = [
+const columns: TableProps<ProductModel>['columns'] = [
+    {
+        title: 'Id',
+        dataIndex: 'id',
+        key: 'id',
+        sorter: {
+            compare: (a, b) => a.id - b.id,
+            //multiple: 1,
+        },
+    },
+    {
+        title: 'Image',
+        dataIndex: 'imageUrl',
+        key: 'imageUrl',
+        render: (url, record) => <img style={imageStyle} height={50} src={url} alt={record.name} />,
+    },
     {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
-        render: (text) => <a>{text}</a>,
+        render: (text) => <a href="/">{text}</a>,
+        sorter: {
+            compare: (a, b) => a.name > b.name ? 1 : -1,
+            //multiple: 2,
+        },
     },
     {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
+        title: 'Category',
+        dataIndex: 'categoryName',
+        key: 'categoryName'
     },
     {
-        title: 'Address',
-        dataIndex: 'address',
-        key: 'address',
+        title: 'Price',
+        dataIndex: 'price',
+        key: 'price',
+        render: (text) => <span>{text}$</span>,
+        sorter: {
+            compare: (a, b) => a.price - b.price,
+            //multiple: 3,
+        },
     },
     {
-        title: 'Tags',
-        key: 'tags',
-        dataIndex: 'tags',
-        render: (_, { tags }) => (
-            <>
-                {tags.map((tag) => {
-                    let color = tag.length > 5 ? 'geekblue' : 'green';
-                    if (tag === 'loser') {
-                        color = 'volcano';
-                    }
-                    return (
-                        <Tag color={color} key={tag}>
-                            {tag.toUpperCase()}
-                        </Tag>
-                    );
-                })}
-            </>
-        ),
+        title: 'Discount',
+        dataIndex: 'discount',
+        key: 'discount',
+        render: (text) => <span>{text}%</span>,
+        sorter: {
+            compare: (a, b) => a.discount - b.discount,
+            //multiple: 4,
+        },
     },
     {
         title: 'Action',
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <a>Invite {record.name}</a>
-                <a>Delete</a>
+                <Button type='primary' icon={<InfoCircleOutlined />} href='#' />
+                <Link to={`edit/${record.id}`}>
+                    <Button icon={<EditOutlined />} />
+                </Link>
+                <Popconfirm
+                    title="Delete the product"
+                    description={`Are you sure to delete the ${record.name}?`}
+                    // onConfirm={() => deleteHandler(record.id)}
+                    okText="Yes"
+                    cancelText="No"
+                    placement='left'
+                >
+                    <Button danger icon={<DeleteOutlined />} />
+                </Popconfirm>
             </Space>
         ),
-    },
-];
-
-const data: DataType[] = [
-    {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
-    },
-    {
-        key: '2',
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-        tags: ['loser'],
-    },
-    {
-        key: '3',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
+    }
 ];
 
 const ProductList: React.FC = () => {
+
+    const [products, setProducts] = React.useState<ProductModel[]>([]);
+
+    useEffect(() => {
+        (async function () {
+            const response = await productsService.getAll();
+            setProducts(response.data);
+        })();
+    }, []);
 
     return (
         <>
@@ -92,7 +98,7 @@ const ProductList: React.FC = () => {
                 <Link to="create">Create New Product</Link>
             </Button>
 
-            <Table columns={columns} dataSource={data}
+            <Table columns={columns} dataSource={products}
                 pagination={{ pageSize: 5 }}
                 rowKey="id" />
         </>

@@ -6,3 +6,11 @@ export interface ProductModel {
     price: number;
     imageUrl: string;
 }
+
+export interface CreateProductModel {
+    name: string;
+    cateogryId: number;
+    discount: number;
+    price: number;
+    image: File;
+}
