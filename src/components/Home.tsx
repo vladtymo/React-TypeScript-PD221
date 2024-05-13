@@ -22,13 +22,6 @@ const Home: React.FC = () => {
 }
 export default Home;
 
-const contentStyle: React.CSSProperties = {
-    height: '360px',
-    color: '#fff',
-    lineHeight: '160px',
-    textAlign: 'center',
-    background: '#364d79'
-};
 const imageStyle: React.CSSProperties = {
     objectFit: "cover",
     width: "100%",
