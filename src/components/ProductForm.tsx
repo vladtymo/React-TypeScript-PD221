@@ -3,7 +3,7 @@ import { Button, Checkbox, Form, FormProps, Input, InputNumber, Select, SelectPr
 import TextArea from 'antd/es/input/TextArea';
 import { ArrowLeftOutlined, UploadOutlined } from '@ant-design/icons';
 import { useNavigate, useParams } from "react-router-dom";
-import { ProductModel } from '../models/products.model';
+import { EditProductModel, ProductModel } from '../models/products.model';
 import { productsService } from '../services/products.service';
 
 type FieldType = {
@@ -20,7 +20,7 @@ const ProductForm: React.FC = () => {
 
     const [categories, setCategories] = useState<SelectProps['options']>([]);
     const [editMode, setEditMode] = useState<boolean>(false);
-    const [, setProduct] = useState<ProductModel | null>(null);
+    const [product, setProduct] = useState<ProductModel | null>(null);
 
     const [form] = Form.useForm();
     const navigate = useNavigate();
@@ -56,17 +56,19 @@ const ProductForm: React.FC = () => {
 
             // use original values
             // TODO: use hidden inputs
-            // const requestModel: ProductModel = {
-            //     ...values,
-            //     id: product?.id,
-            //     imageUrl: product?.imageUrl
-            // }
+            if (product === null) return;
 
-            // const response = await productsService.edit(requestModel);
+            const requestModel: EditProductModel = {
+                ...values,
+                id: product.id,
+                imageUrl: product.imageUrl
+            }
 
-            // if (response.status === 200) {
-            //     message.success(`Product edited successfully!`);
-            // }
+            const response = await productsService.edit(requestModel);
+
+            if (response.status === 200) {
+                message.success(`Product edited successfully!`);
+            }
         }
         else {
             const response = await productsService.create(values);

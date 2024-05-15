@@ -14,4 +14,16 @@ export interface CreateProductModel {
     price: number;
     image: File;
     description?: string;
+    inStock: boolean;
+}
+
+export interface EditProductModel {
+    id: number;
+    name: string;
+    categoryId: number;
+    discount: number;
+    price: number;
+    imageUrl: string;
+    description?: string;
+    inStock: boolean;
 }

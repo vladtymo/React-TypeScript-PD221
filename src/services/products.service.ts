@@ -1,5 +1,5 @@
 import axios from "axios"
-import { CreateProductModel, ProductModel } from "../models/products.model";
+import { CreateProductModel, EditProductModel, ProductModel } from "../models/products.model";
 import { CategoryModel } from "../models/category.model";
 
 const api = axios.create({
@@ -25,6 +25,8 @@ export const productsService = {
         const formData = new FormData();
 
         for (const key in model) {
+            if (model[key as keyof CreateProductModel] == null) continue;
+
             const value = model[key as keyof CreateProductModel] as string | Blob;
             formData.append(key, value);
         }
@@ -32,7 +34,7 @@ export const productsService = {
         return api.post("", formData);
     },
 
-    edit: function (model: ProductModel) {
+    edit: function (model: EditProductModel) {
         return api.put("", model);
     },
 
