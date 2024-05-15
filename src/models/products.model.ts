@@ -9,8 +9,9 @@ export interface ProductModel {
 
 export interface CreateProductModel {
     name: string;
-    cateogryId: number;
+    categoryId: number;
     discount: number;
     price: number;
     image: File;
+    description?: string;
 }

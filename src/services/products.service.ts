@@ -1,6 +1,6 @@
 import axios from "axios"
-import { message } from "antd";
 import { CreateProductModel, ProductModel } from "../models/products.model";
+import { CategoryModel } from "../models/category.model";
 
 const api = axios.create({
     baseURL: `${process.env.REACT_APP_API_URL}products`
@@ -14,11 +14,11 @@ export const productsService = {
 
     // TODO: set explicit data type
     get: function (id: number) {
-        return api.get(`${id}`);
+        return api.get<ProductModel>(`${id}`);
     },
 
     getCategories: function () {
-        return api.get("categories");
+        return api.get<CategoryModel[]>("categories");
     },
 
     create: function (model: CreateProductModel) {

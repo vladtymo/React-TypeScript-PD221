@@ -4,6 +4,7 @@ import Layout from "./components/Layout";
 import Home from "./components/Home";
 import NoPage from "./components/NoPage";
 import ProductList from "./components/ProductList";
+import ProductForm from "./components/ProductForm";
 
 const App: React.FC = () => {
 
@@ -13,7 +14,7 @@ const App: React.FC = () => {
         <Route index element={<Home />} />
         <Route path="products" element={<ProductList />} />
         {/* <Route path="login" element={<Login />} /> */}
-        {/* <Route path="products/create" element={<CreateForm />} /> */}
+        <Route path="products/create" element={<ProductForm />} />
         {/* <Route path="products/edit/:id" element={<CreateForm />} /> */}
         <Route path="*" element={<NoPage />} />
       </Route>

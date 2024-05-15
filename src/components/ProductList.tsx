@@ -1,85 +1,86 @@
 import React, { useEffect } from 'react';
-import { Button, Popconfirm, Space, Table, Tag } from 'antd';
+import { Button, Popconfirm, Space, Table, message } from 'antd';
 import type { TableProps } from 'antd';
 import { Link } from 'react-router-dom';
 import { productsService } from '../services/products.service';
 import { ProductModel } from '../models/products.model';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined } from '@ant-design/icons';
 
-const columns: TableProps<ProductModel>['columns'] = [
-    {
-        title: 'Id',
-        dataIndex: 'id',
-        key: 'id',
-        sorter: {
-            compare: (a, b) => a.id - b.id,
-            //multiple: 1,
+const getColumns = (deleteHandler: (id: number) => void): TableProps<ProductModel>['columns'] =>
+    [
+        {
+            title: 'Id',
+            dataIndex: 'id',
+            key: 'id',
+            sorter: {
+                compare: (a, b) => a.id - b.id,
+                //multiple: 1,
+            },
         },
-    },
-    {
-        title: 'Image',
-        dataIndex: 'imageUrl',
-        key: 'imageUrl',
-        render: (url, record) => <img style={imageStyle} height={50} src={url} alt={record.name} />,
-    },
-    {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-        render: (text) => <a href="/">{text}</a>,
-        sorter: {
-            compare: (a, b) => a.name > b.name ? 1 : -1,
-            //multiple: 2,
+        {
+            title: 'Image',
+            dataIndex: 'imageUrl',
+            key: 'imageUrl',
+            render: (url, record) => <img style={imageStyle} height={50} src={url} alt={record.name} />,
         },
-    },
-    {
-        title: 'Category',
-        dataIndex: 'categoryName',
-        key: 'categoryName'
-    },
-    {
-        title: 'Price',
-        dataIndex: 'price',
-        key: 'price',
-        render: (text) => <span>{text}$</span>,
-        sorter: {
-            compare: (a, b) => a.price - b.price,
-            //multiple: 3,
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+            render: (text) => <a href="/">{text}</a>,
+            sorter: {
+                compare: (a, b) => a.name > b.name ? 1 : -1,
+                //multiple: 2,
+            },
         },
-    },
-    {
-        title: 'Discount',
-        dataIndex: 'discount',
-        key: 'discount',
-        render: (text) => <span>{text}%</span>,
-        sorter: {
-            compare: (a, b) => a.discount - b.discount,
-            //multiple: 4,
+        {
+            title: 'Category',
+            dataIndex: 'categoryName',
+            key: 'categoryName'
         },
-    },
-    {
-        title: 'Action',
-        key: 'action',
-        render: (_, record) => (
-            <Space size="middle">
-                <Button type='primary' icon={<InfoCircleOutlined />} href='#' />
-                <Link to={`edit/${record.id}`}>
-                    <Button icon={<EditOutlined />} />
-                </Link>
-                <Popconfirm
-                    title="Delete the product"
-                    description={`Are you sure to delete the ${record.name}?`}
-                    // onConfirm={() => deleteHandler(record.id)}
-                    okText="Yes"
-                    cancelText="No"
-                    placement='left'
-                >
-                    <Button danger icon={<DeleteOutlined />} />
-                </Popconfirm>
-            </Space>
-        ),
-    }
-];
+        {
+            title: 'Price',
+            dataIndex: 'price',
+            key: 'price',
+            render: (text) => <span>{text}$</span>,
+            sorter: {
+                compare: (a, b) => a.price - b.price,
+                //multiple: 3,
+            },
+        },
+        {
+            title: 'Discount',
+            dataIndex: 'discount',
+            key: 'discount',
+            render: (text) => <span>{text}%</span>,
+            sorter: {
+                compare: (a, b) => a.discount - b.discount,
+                //multiple: 4,
+            },
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (_, record) => (
+                <Space size="middle">
+                    <Button type='primary' icon={<InfoCircleOutlined />} href='#' />
+                    <Link to={`edit/${record.id}`}>
+                        <Button icon={<EditOutlined />} />
+                    </Link>
+                    <Popconfirm
+                        title="Delete the product"
+                        description={`Are you sure to delete the ${record.name}?`}
+                        onConfirm={() => deleteHandler(record.id)}
+                        okText="Yes"
+                        cancelText="No"
+                        placement='left'
+                    >
+                        <Button danger icon={<DeleteOutlined />} />
+                    </Popconfirm>
+                </Space>
+            ),
+        }
+    ];
 
 const ProductList: React.FC = () => {
 
@@ -92,13 +93,24 @@ const ProductList: React.FC = () => {
         })();
     }, []);
 
+    const deleteProduct = async (id: number) => {
+        console.log("Deleting product: ", id);
+
+        const response = await productsService.delete(id);
+        if (response.status === 200) {
+
+            setProducts(products.filter(x => x.id !== id));
+            message.success(`Product deleted successfully!`);
+        }
+    };
+
     return (
         <>
             <Button style={createBtn} type="primary">
                 <Link to="create">Create New Product</Link>
             </Button>
 
-            <Table columns={columns} dataSource={products}
+            <Table columns={getColumns(deleteProduct)} dataSource={products}
                 pagination={{ pageSize: 5 }}
                 rowKey="id" />
         </>
