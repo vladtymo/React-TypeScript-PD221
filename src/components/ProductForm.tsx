@@ -13,7 +13,7 @@ type FieldType = {
     categoryId: number;
     description?: string;
     inStock: boolean;
-    image: File; // TODO: fix type
+    image: File;
 };
 
 const ProductForm: React.FC = () => {
