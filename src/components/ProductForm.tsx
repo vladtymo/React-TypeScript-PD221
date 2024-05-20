@@ -92,6 +92,10 @@ const ProductForm: React.FC = () => {
         return e?.file.originFileObj;
     };
 
+    const normDescription = (e: any) => {
+        return e.target.value == "" ? null : e.target.value;
+    }
+
     return (
         <>
             <Button type="text" onClick={() => navigate(-1)}>
@@ -150,6 +154,7 @@ const ProductForm: React.FC = () => {
                     <Form.Item<FieldType>
                         name="discount"
                         label="Discount"
+                        initialValue={0}
                         rules={[
                             {
                                 required: true,
@@ -190,6 +195,11 @@ const ProductForm: React.FC = () => {
                     label="Image"
                     valuePropName="file"
                     getValueFromEvent={normFile}
+                    rules={[
+                        {
+                            required: editMode ? false : true,
+                        },
+                    ]}
                 >
                     <Upload maxCount={1}>
                         <Button icon={<UploadOutlined />}>Click to Choose a File</Button>
@@ -199,6 +209,7 @@ const ProductForm: React.FC = () => {
                 <Form.Item<FieldType>
                     name="description"
                     label="Description"
+                    getValueFromEvent={normDescription}
                     initialValue={null}>
                     <TextArea rows={4}
                         placeholder="Enter product description"
