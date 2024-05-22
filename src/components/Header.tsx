@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AccountContext } from '../contexts/user.context';
 import React from 'react';
+import { accountsService } from '../services/accounts.service';
 const { Header: HeaderAntd } = LayoutAntd;
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -46,6 +47,11 @@ const Header: React.FC = () => {
         }
     }, [location, current]);
 
+    const onLogout = () => {
+        accountsService.logout();
+        logout();
+    }
+
     return (
         <HeaderAntd style={{ display: 'flex', alignItems: 'center' }}>
             <div className="demo-logo" />
@@ -61,7 +67,7 @@ const Header: React.FC = () => {
                 isAuth ?
                     <Space>
                         <span style={{ color: "white" }}>Hello, {email}</span>
-                        <Button style={{ color: "white" }}><LogoutOutlined /></Button>
+                        <a onClick={onLogout} style={{ color: "white" }}><LogoutOutlined /></a>
                     </Space>
                     :
                     <Space size="large">
