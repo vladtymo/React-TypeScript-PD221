@@ -3,6 +3,8 @@ import { Button, Checkbox, DatePicker, Form, FormProps, Input, InputNumber, Sele
 import TextArea from 'antd/es/input/TextArea';
 import { accountsService } from '../services/accounts.service';
 import { useNavigate } from 'react-router-dom';
+import { tokensService } from '../services/tokens.service';
+import { AccountContext } from '../contexts/user.context';
 
 type FieldType = {
     email: string;
@@ -14,6 +16,8 @@ const Login: React.FC = () => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
 
+    const { login } = React.useContext(AccountContext);
+
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
 
         console.log(values);
@@ -23,6 +27,13 @@ const Login: React.FC = () => {
 
             if (res.status === 200) {
                 message.success(`Your have logged in successfully!`);
+
+                tokensService.save(res.data);
+
+                const payload = tokensService.getAccessTokenPayload();
+                console.log(payload);
+
+                login(payload?.email ?? "");
 
                 // go back
                 navigate(-1);
