@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 type FieldType = {
     email: string;
     password: string;
+    confirmPassword: string;
     birthDate: Date;
     phone?: string;
 };
@@ -18,15 +19,19 @@ const Register: React.FC = () => {
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
 
-        console.log(values);
-        const res = await accountsService.register(values);
+        try {
+            const res = await accountsService.register(values);
 
-        if (res.status === 200) {
-            message.success(`Your have registered successfully!`);
+            if (res.status === 200) {
+                message.success(`Your have registered successfully!`);
+            }
+
+            // go back
+            navigate(-1);
+
+        } catch (error: any) {
+            message.error(error.response.data.message);
         }
-
-        // go back
-        navigate(-1);
     }
 
     return (
@@ -65,6 +70,27 @@ const Register: React.FC = () => {
                     ]}
                 >
                     <Input.Password placeholder="Enter your password" />
+                </Form.Item>
+
+                <Form.Item<FieldType>
+                    name="confirmPassword"
+                    label="Confirm Password"
+                    dependencies={['password']}
+                    rules={[
+                        {
+                            required: true,
+                        },
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                if (!value || getFieldValue('password') === value) {
+                                    return Promise.resolve();
+                                }
+                                return Promise.reject(new Error('The new password that you entered do not match!'));
+                            },
+                        }),
+                    ]}
+                >
+                    <Input.Password placeholder="Confirm your password" />
                 </Form.Item>
 
                 <Form.Item<FieldType>
