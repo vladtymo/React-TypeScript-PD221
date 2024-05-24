@@ -24,6 +24,7 @@ export interface EditProductModel {
     discount: number;
     price: number;
     imageUrl: string;
+    newImage?: File;
     description?: string;
     inStock: boolean;
 }

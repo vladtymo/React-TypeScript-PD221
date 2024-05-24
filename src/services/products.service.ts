@@ -35,7 +35,16 @@ export const productsService = {
     },
 
     edit: function (model: EditProductModel) {
-        return api.put("", model);
+        const formData = new FormData();
+
+        for (const key in model) {
+            if (model[key as keyof EditProductModel] == null) continue;
+
+            const value = model[key as keyof EditProductModel] as string | Blob;
+            formData.append(key, value);
+        }
+
+        return api.put("", formData);
     },
 
     delete: function (id: number) {
