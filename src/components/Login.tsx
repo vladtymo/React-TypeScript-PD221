@@ -5,6 +5,8 @@ import { accountsService } from '../services/accounts.service';
 import { useNavigate } from 'react-router-dom';
 import { tokensService } from '../services/tokens.service';
 import { AccountContext } from '../contexts/user.context';
+import { useAppDispatch } from '../redux/hook';
+import { login } from '../redux/accounts/accountSlice';
 
 type FieldType = {
     email: string;
@@ -16,7 +18,8 @@ const Login: React.FC = () => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
 
-    const { login } = React.useContext(AccountContext);
+    // const { login } = React.useContext(AccountContext);
+    const dispatch = useAppDispatch();
 
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
 
@@ -31,9 +34,12 @@ const Login: React.FC = () => {
                 tokensService.save(res.data);
 
                 const payload = tokensService.getAccessTokenPayload();
-                console.log(payload);
 
-                login(payload?.email ?? "");
+                if (payload != null) {
+                    // ----- working with state
+                    //login(payload?.email ?? "");
+                    dispatch(login(payload.email));
+                }
 
                 // go back
                 navigate(-1);

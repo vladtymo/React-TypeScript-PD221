@@ -4,16 +4,20 @@ import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import AccountProvider from './contexts/user.context';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   // <React.StrictMode>
-  <AccountProvider>
+  <Provider store={store}>
+    {/* <AccountProvider> */}
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </AccountProvider>
+    {/* </AccountProvider> */}
+  </Provider>
   // </React.StrictMode>
 );

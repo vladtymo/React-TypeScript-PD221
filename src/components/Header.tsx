@@ -5,6 +5,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { AccountContext } from '../contexts/user.context';
 import React from 'react';
 import { accountsService } from '../services/accounts.service';
+import { useAppDispatch, useAppSelector } from '../redux/hook';
+import { logout, selectEmail, selectIsAuth } from '../redux/accounts/accountSlice';
 const { Header: HeaderAntd } = LayoutAntd;
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -37,7 +39,10 @@ const Header: React.FC = () => {
     let location = useLocation();
     const [current, setCurrent] = useState<string>(location.pathname);
 
-    const { logout, isAuth, email } = React.useContext(AccountContext);
+    // const { logout, isAuth, email } = React.useContext(AccountContext);
+    const email = useAppSelector(selectEmail);
+    const isAuth = useAppSelector(selectIsAuth);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (location) {
@@ -49,7 +54,9 @@ const Header: React.FC = () => {
 
     const onLogout = () => {
         accountsService.logout();
-        logout();
+        // ----- working with state
+        // logout();
+        dispatch(logout());
     }
 
     return (
