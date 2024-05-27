@@ -94,7 +94,7 @@ const ProductForm: React.FC = () => {
     };
 
     const normDescription = (e: any) => {
-        return e.target.value == "" ? null : e.target.value;
+        return e.target.value === "" ? null : e.target.value;
     }
 
     return (

@@ -1,4 +1,4 @@
-import { Breadcrumb, Layout as LayoutAntd, Menu, theme } from 'antd';
+import { Layout as LayoutAntd } from 'antd';
 const { Footer: FooterAntd } = LayoutAntd;
 
 const Footer: React.FC = () => {

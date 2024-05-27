@@ -1,8 +1,7 @@
 import { HomeOutlined, InfoCircleOutlined, LoginOutlined, LogoutOutlined, PlusCircleOutlined, ProductOutlined, UnorderedListOutlined } from '@ant-design/icons';
-import { Button, Layout as LayoutAntd, Menu, MenuProps, Space } from 'antd';
+import { Layout as LayoutAntd, Menu, MenuProps, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { AccountContext } from '../contexts/user.context';
 import React from 'react';
 import { accountsService } from '../services/accounts.service';
 import { useAppDispatch, useAppSelector } from '../redux/hook';
@@ -74,7 +73,7 @@ const Header: React.FC = () => {
                 isAuth ?
                     <Space>
                         <span style={{ color: "white" }}>Hello, {email}</span>
-                        <a onClick={onLogout} style={{ color: "white" }}><LogoutOutlined /></a>
+                        <span onClick={onLogout} style={{ color: "white" }}><LogoutOutlined /></span>
                     </Space>
                     :
                     <Space size="large">
